@@ -10,7 +10,7 @@ from test_data import update_meme_data, invalid_meme_data_to_update
 @pytest.mark.regression
 class TestUpdateMeme:
     @allure.feature('Memes')
-    @allure.story('Fully Update meme')
+    @allure.story('Fully update meme')
     @allure.title('Successfully update (replace) meme')
     @pytest.mark.smoke
     @pytest.mark.positive
