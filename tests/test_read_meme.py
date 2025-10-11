@@ -79,7 +79,7 @@ class TestReadMeme:
         get_meme_api.assert_error_message()
 
     @allure.feature('Memes')
-    @allure.story('Get meme')
+    @allure.story('Read meme')
     @allure.title('Try to read meme by id without auth token')
     @pytest.mark.negative
     @pytest.mark.read
@@ -90,7 +90,7 @@ class TestReadMeme:
         get_meme_api.assert_error_message()
 
     @allure.feature('Memes')
-    @allure.story('Get meme')
+    @allure.story('Read meme')
     @allure.title('Try to read meme by string id')
     @pytest.mark.negative
     @pytest.mark.read
