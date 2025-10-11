@@ -9,8 +9,8 @@ from test_data import unexisting_meme_id, string_id
 @pytest.mark.regression
 class TestReadMemes:
     @allure.feature('Memes')
-    @allure.story('Get memes')
-    @allure.title('Successfully get all memes')
+    @allure.story('Read memes')
+    @allure.title('Successfully read all memes')
     @pytest.mark.smoke
     @pytest.mark.positive
     @pytest.mark.read
@@ -20,8 +20,8 @@ class TestReadMemes:
         get_memes_api.assert_has_memes()
 
     @allure.feature('Memes')
-    @allure.story('Get memes')
-    @allure.title('Try to get all memes with wrong url')
+    @allure.story('Read memes')
+    @allure.title('Try to read all memes with wrong url')
     @pytest.mark.negative
     @pytest.mark.read
     def test_get_all_memes_with_wrong_url(self, get_memes_api, auth_headers):
@@ -30,8 +30,8 @@ class TestReadMemes:
         get_memes_api.assert_error_message()
 
     @allure.feature('Memes')
-    @allure.story('Get memes')
-    @allure.title('Try to get all memes without auth token')
+    @allure.story('Read memes')
+    @allure.title('Try to read all memes without auth token')
     @pytest.mark.negative
     @pytest.mark.read
     def test_get_all_memes_without_auth(self, get_memes_api):
@@ -40,8 +40,8 @@ class TestReadMemes:
         get_memes_api.assert_error_message()
 
     @allure.feature('Memes')
-    @allure.story('Get meme')
-    @allure.title('Successfully get meme by its id')
+    @allure.story('Read meme')
+    @allure.title('Successfully read meme by its id')
     @pytest.mark.positive
     @pytest.mark.smoke
     @pytest.mark.read
@@ -56,8 +56,8 @@ class TestReadMemes:
         get_meme_api.assert_meme_data(meme_data)
 
     @allure.feature('Memes')
-    @allure.story('Get meme')
-    @allure.title('Try to get meme by unexisting id')
+    @allure.story('Read meme')
+    @allure.title('Try to read meme by unexisting id')
     @pytest.mark.negative
     @pytest.mark.read
     def test_get_meme_with_unexisting_id(self, get_meme_api, auth_headers):
@@ -66,8 +66,8 @@ class TestReadMemes:
         get_meme_api.assert_error_message()
 
     @allure.feature('Memes')
-    @allure.story('Get meme')
-    @allure.title('Try to get meme by id with wrong url')
+    @allure.story('Read meme')
+    @allure.title('Try to read meme by id with wrong url')
     @pytest.mark.negative
     @pytest.mark.read
     def test_get_meme_by_wrong_url(
@@ -80,7 +80,7 @@ class TestReadMemes:
 
     @allure.feature('Memes')
     @allure.story('Get meme')
-    @allure.title('Try to get meme by id without auth token')
+    @allure.title('Try to read meme by id without auth token')
     @pytest.mark.negative
     @pytest.mark.read
     def test_get_meme_without_auth(self, posted_meme, get_meme_api):
@@ -91,7 +91,7 @@ class TestReadMemes:
 
     @allure.feature('Memes')
     @allure.story('Get meme')
-    @allure.title('Try to get meme by string id')
+    @allure.title('Try to read meme by string id')
     @pytest.mark.negative
     @pytest.mark.read
     def test_get_meme_with_string_id(self, get_meme_api, auth_headers):

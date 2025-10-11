@@ -42,7 +42,7 @@ class PutMeme(BaseAPI):
             self.json = None
             self.actual_error_message = self.response.text
 
-    @allure.step('Send PUT request to fully update meme by id with url')
+    @allure.step('Send PUT request to fully update meme by id with wrong url')
     def update_meme_with_wrong_url(self, meme_id, meme_data, auth_data=None):
         self.url = self.base_url + f'/memes/{meme_id}'
         self.response = requests.put(
