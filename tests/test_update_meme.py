@@ -10,12 +10,12 @@ from test_data import update_meme_data, invalid_meme_data_to_update
 @pytest.mark.regression
 class TestUpdateMeme:
     @allure.feature('Memes')
-    @allure.story('Update meme')
+    @allure.story('Fully Update meme')
     @allure.title('Successfully update (replace) meme')
     @pytest.mark.smoke
     @pytest.mark.positive
     @pytest.mark.fully_update
-    def test_fully_update_meme_success(
+    def test_put_meme_success(
         self, put_meme_api, delete_meme_api, posted_meme, auth_headers
     ):
         m_id = posted_meme[0]
@@ -32,11 +32,11 @@ class TestUpdateMeme:
         delete_meme_api.delete_meme(m_id, auth_headers)
 
     @allure.feature('Memes')
-    @allure.story('Put meme')
+    @allure.story('Fully update meme')
     @allure.title('Try to fully update (replace) meme without auth token')
     @pytest.mark.negative
     @pytest.mark.fully_update
-    def test_update_meme_without_auth(self, posted_meme, put_meme_api):
+    def test_put_meme_without_auth(self, posted_meme, put_meme_api):
         m_id = posted_meme[0]
         update_meme_data['id'] = m_id
         meme_data_validated = PutMemeRequestSchema(
@@ -48,11 +48,11 @@ class TestUpdateMeme:
         put_meme_api.assert_error_message()
 
     @allure.feature('Memes')
-    @allure.story('Put meme')
+    @allure.story('Fully update meme')
     @allure.title('Try to fully update (replace) meme with wrong url')
     @pytest.mark.negative
     @pytest.mark.fully_update
-    def test_update_meme_with_wrong_url(
+    def test_put_meme_with_wrong_url(
         self, posted_meme, put_meme_api, auth_headers
     ):
         m_id = posted_meme[0]
@@ -68,7 +68,7 @@ class TestUpdateMeme:
         put_meme_api.assert_error_message()
 
     @allure.feature('Memes')
-    @allure.story('Put meme')
+    @allure.story('Fully update meme')
     @allure.title('Try to fully update (replace) meme with invalid data')
     @pytest.mark.negative
     @pytest.mark.fully_update
