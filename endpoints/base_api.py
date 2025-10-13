@@ -14,6 +14,7 @@ class BaseAPI:
         self.expected_text_in_bad_request_error_message = 'Bad Request'
         self.expected_text_in_wrong_url_error_message = 'Not Found'
         self.expected_text_in_unauthorized_error_message = 'Unauthorized'
+        self.expected_text_in_forbidden_error_message = 'Forbidden'
         self.expected_text_in_error_message = None
         self.actual_error_message = None
 
@@ -34,6 +35,12 @@ class BaseAPI:
         assert (
             self.status_code == 401
         ), f'Expected status code 401, but got {self.status_code}'
+
+    @allure.step('Assert response status is Forbidden')
+    def assert_response_is_403(self):
+        assert (
+            self.status_code == 403
+        ), f'Expected status code 403, but got {self.status_code}'
 
     @allure.step('Assert response status is Not Found')
     def assert_response_is_404(self):

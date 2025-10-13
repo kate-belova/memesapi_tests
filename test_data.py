@@ -6,6 +6,8 @@ valid_auth_data = [
     {'name': 'A' * 100},
 ]
 
+another_user_auth_data = {'name': 'another_user'}
+
 post_meme_data = [
     {
         'url': 'https://t.me/python_community_rus/27/168416',

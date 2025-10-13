@@ -33,6 +33,28 @@ class TestUpdateMeme:
 
     @allure.feature('Memes')
     @allure.story('Fully update meme')
+    @allure.title('Try to fully update meme another user meme')
+    @pytest.mark.smoke
+    @pytest.mark.negative
+    @pytest.mark.fully_update
+    def test_put_meme_created_by_another_user(
+        self,
+        put_meme_api,
+        another_user_meme,
+        auth_headers,
+    ):
+        m_id = another_user_meme[0]
+        update_meme_data['id'] = m_id
+        meme_data_validated = PutMemeRequestSchema(
+            **update_meme_data
+        ).model_dump()
+        put_meme_api.update_meme(m_id, meme_data_validated, auth_headers)
+
+        put_meme_api.assert_response_is_403()
+        put_meme_api.assert_error_message()
+
+    @allure.feature('Memes')
+    @allure.story('Fully update meme')
     @allure.title('Try to fully update (replace) meme without auth token')
     @pytest.mark.negative
     @pytest.mark.fully_update
