@@ -26,6 +26,10 @@ class PutMeme(BaseAPI):
             self.expected_text_in_error_message = (
                 self.expected_text_in_unauthorized_error_message
             )
+        elif self.status_code == 403:
+            self.expected_text_in_error_message = (
+                self.expected_text_in_forbidden_error_message
+            )
         self.content_type = self.response.headers.get('content-type', '')
 
         if 'application/json' in self.content_type:

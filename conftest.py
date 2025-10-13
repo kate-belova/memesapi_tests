@@ -4,7 +4,7 @@ import pytest
 
 from endpoints import AuthAPI, GetMemes, GetMeme, PostMeme, DeleteMeme, PutMeme
 from schemas import PostMemeRequestSchema
-from test_data import valid_auth_data, post_meme_data
+from test_data import valid_auth_data, post_meme_data, another_user_auth_data
 
 
 def pytest_configure(config):
@@ -30,8 +30,27 @@ def auth_token():
 
 
 @pytest.fixture()
+def another_user_auth_token():
+    auth_api = AuthAPI()
+    auth_api.get_token(another_user_auth_data)
+
+    if auth_api.status_code == 200 and auth_api.token:
+        is_alive = auth_api.check_token()
+        if is_alive:
+            return auth_api.token
+
+    pytest.fail('Failed to get valid auth token for another user')
+    return None
+
+
+@pytest.fixture()
 def auth_headers(auth_token):
     return {'Authorization': auth_token}
+
+
+@pytest.fixture()
+def another_user_auth_headers(another_user_auth_token):
+    return {'Authorization': another_user_auth_token}
 
 
 @pytest.fixture
@@ -68,6 +87,19 @@ def posted_meme(post_meme_api, delete_meme_api, auth_headers):
     yield m_id, meme_data
 
     delete_meme_api.delete_meme(m_id, auth_headers)
+
+
+@pytest.fixture
+def another_user_meme(
+    post_meme_api, delete_meme_api, another_user_auth_headers
+):
+    meme_data = PostMemeRequestSchema(**post_meme_data[0]).model_dump()
+    post_meme_api.add_meme(meme_data, another_user_auth_headers)
+    m_id = post_meme_api.id
+
+    yield m_id, meme_data
+
+    delete_meme_api.delete_meme(m_id, another_user_auth_headers)
 
 
 @pytest.fixture

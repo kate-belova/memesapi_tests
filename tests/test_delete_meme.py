@@ -27,6 +27,23 @@ class TestDeleteMeme:
 
     @allure.feature('Memes')
     @allure.story('Delete meme')
+    @allure.title('Try to delete another user meme')
+    @pytest.mark.smoke
+    @pytest.mark.negative
+    @pytest.mark.delete
+    def test_delete_another_user_meme(
+        self,
+        delete_meme_api,
+        another_user_meme,
+        auth_headers,
+    ):
+        m_id = another_user_meme[0]
+        delete_meme_api.delete_meme(m_id, auth_headers)
+        delete_meme_api.assert_response_is_403()
+        delete_meme_api.assert_error_message()
+
+    @allure.feature('Memes')
+    @allure.story('Delete meme')
     @allure.title('Try to delete meme by its id with wrong url')
     @pytest.mark.negative
     @pytest.mark.delete

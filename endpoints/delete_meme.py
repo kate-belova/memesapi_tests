@@ -26,6 +26,10 @@ class DeleteMeme(BaseAPI):
                 self.expected_text_in_error_message = (
                     self.expected_text_in_unauthorized_error_message
                 )
+            elif self.status_code == 403:
+                self.expected_text_in_error_message = (
+                    self.expected_text_in_forbidden_error_message
+                )
             elif self.status_code == 404:
                 self.expected_text_in_error_message = (
                     self.expected_text_in_wrong_url_error_message
