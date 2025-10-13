@@ -64,8 +64,29 @@ def get_meme_api():
 
 
 @pytest.fixture
-def post_meme_api():
-    return PostMeme()
+def post_meme_api(request):
+    api = PostMeme()
+    created_meme_ids = []
+
+    original_add_meme = api.add_meme
+
+    def add_meme_with_tracking(meme_data, auth_data=None):
+        result = original_add_meme(meme_data, auth_data)
+        if api.id and api.id not in created_meme_ids:
+            created_meme_ids.append((api.id, auth_data))
+        return result
+
+    api.add_meme = add_meme_with_tracking
+
+    def cleanup():
+        if created_meme_ids:
+            delete_api = DeleteMeme()
+            for meme_id, auth_data in created_meme_ids:
+                if auth_data:
+                    delete_api.delete_meme(meme_id, auth_data)
+
+    request.addfinalizer(cleanup)
+    return api
 
 
 @pytest.fixture
@@ -79,14 +100,12 @@ def delete_meme_api():
 
 
 @pytest.fixture
-def posted_meme(post_meme_api, delete_meme_api, auth_headers):
+def posted_meme(post_meme_api, auth_headers):
     meme_data = PostMemeRequestSchema(**post_meme_data[0]).model_dump()
     post_meme_api.add_meme(meme_data, auth_headers)
     m_id = post_meme_api.id
 
     yield m_id, meme_data
-
-    delete_meme_api.delete_meme(m_id, auth_headers)
 
 
 @pytest.fixture

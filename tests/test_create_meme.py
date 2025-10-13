@@ -24,17 +24,12 @@ class TestCreateMeme:
             'maximal_meme_long_text_multiple_tags',
         ],
     )
-    def test_post_meme_success(
-        self, post_meme_api, delete_meme_api, meme_data, auth_headers
-    ):
+    def test_post_meme_success(self, post_meme_api, meme_data, auth_headers):
         meme_data_validated = PostMemeRequestSchema(**meme_data).model_dump()
         post_meme_api.add_meme(meme_data_validated, auth_headers)
 
         post_meme_api.assert_response_is_200()
         post_meme_api.assert_meme_data(meme_data_validated)
-        m_id = post_meme_api.id
-
-        delete_meme_api.delete_meme(m_id, auth_headers)
 
     @allure.feature('Memes')
     @allure.story('Create meme')

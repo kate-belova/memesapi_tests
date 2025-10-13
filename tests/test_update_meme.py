@@ -15,9 +15,7 @@ class TestUpdateMeme:
     @pytest.mark.smoke
     @pytest.mark.positive
     @pytest.mark.fully_update
-    def test_put_meme_success(
-        self, put_meme_api, delete_meme_api, posted_meme, auth_headers
-    ):
+    def test_put_meme_success(self, put_meme_api, posted_meme, auth_headers):
         m_id = posted_meme[0]
         update_meme_data['id'] = m_id
         meme_data_validated = PutMemeRequestSchema(
@@ -27,9 +25,6 @@ class TestUpdateMeme:
 
         put_meme_api.assert_response_is_200()
         put_meme_api.assert_meme_data(meme_data_validated)
-        m_id = put_meme_api.id
-
-        delete_meme_api.delete_meme(m_id, auth_headers)
 
     @allure.feature('Memes')
     @allure.story('Fully update meme')
