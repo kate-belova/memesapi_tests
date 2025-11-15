@@ -8,21 +8,27 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Setup Python Environment') {
             steps {
                 sh '''
                     echo "Python version:"
                     python3 --version
 
+                    python3 -m venv venv
+                    . venv/bin/activate
+
                     echo "Installing project dependencies..."
-                    pip3 install -r requirements.txt
+                    pip install -r requirements.txt
                 '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'python3 -m pytest --alluredir=allure-results -v'
+                sh '''
+                    . venv/bin/activate
+                    python -m pytest --alluredir=allure-results -v
+                '''
             }
         }
     }
@@ -31,14 +37,7 @@ pipeline {
         always {
             archiveArtifacts artifacts: 'allure-results/**/*', fingerprint: true
 
-            publishHTML(target: [
-                allowMissing: true,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'allure-results',
-                reportFiles: '**/*.html',
-                reportName: 'Test Results'
-            ])
+            echo "Build completed with status: ${currentBuild.result}"
         }
 
         success {
