@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        python 'python3.13'
-        nodejs 'nodejs'
-    }
-
     environment {
         ALLURE_RESULTS = 'allure-results'
     }
@@ -17,27 +12,43 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Setup Python') {
             steps {
                 sh '''
-                    python -m pip install --upgrade pip
-                    pip install -r requirements.txt
+                    python3 --version || echo "Python3 not found, installing..."
+                    python3 -m pip install --upgrade pip
+                    pip3 install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Install Allure CLI') {
+            steps {
+                sh '''
+                    # Установка Allure CLI
+                    curl -o allure-2.15.0.tgz -Ls https://github.com/allure-framework/allure2/releases/download/2.15.0/allure-2.15.0.tgz
+                    tar -zxvf allure-2.15.0.tgz
+                    export PATH=$PATH:$(pwd)/allure-2.15.0/bin
+                    allure --version
                 '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'pytest'
-                //
+                sh '''
+                    pytest
+                '''
             }
         }
 
         stage('Generate Allure Report') {
             steps {
-                sh """
+                sh '''
+                    # Используем локально установленный Allure
+                    export PATH=$PATH:$(pwd)/allure-2.15.0/bin
                     allure generate ${ALLURE_RESULTS} --clean -o allure-report
-                """
+                '''
             }
         }
     }
@@ -56,10 +67,6 @@ pipeline {
                 reportFiles: 'index.html',
                 reportName: 'Allure Report'
             ])
-
-            sh '''
-                rm -rf allure-results || true
-            '''
         }
 
         success {
