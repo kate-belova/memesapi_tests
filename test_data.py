@@ -80,5 +80,5 @@ invalid_meme_data_to_update = [
     },
 ]
 
-unexisting_meme_id = 10000
+unexisting_meme_id = 55555
 string_id = 'one'
