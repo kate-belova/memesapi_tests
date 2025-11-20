@@ -1,17 +1,6 @@
 name: MemesAPI tests
 
-on:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths:
-      - 'memesapi_tests/tests/**'
-      - '**.py'
-      - 'requirements.txt'
-      - 'pytest.ini'
-      - 'memesapi.yaml'
-  pull_request:
-    branches: [ main ]
+on: [ push, pull_request, workflow_dispatch ]
 
 
 jobs:
