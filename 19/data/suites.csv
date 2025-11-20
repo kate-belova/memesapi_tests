@@ -1,0 +1,7 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","423","Successful authorization","tests","Thu Nov 20 17:13:26 UTC 2025","passed","Thu Nov 20 17:13:27 UTC 2025","TestAuth","test_authorization","",""
+"","416","Successful authorization","tests","Thu Nov 20 17:13:27 UTC 2025","passed","Thu Nov 20 17:13:27 UTC 2025","TestAuth","test_authorization","",""
+"","418","Successful authorization","tests","Thu Nov 20 17:13:26 UTC 2025","passed","Thu Nov 20 17:13:27 UTC 2025","TestAuth","test_authorization","",""
+"","432","Successful authorization","tests","Thu Nov 20 17:13:26 UTC 2025","passed","Thu Nov 20 17:13:27 UTC 2025","TestAuth","test_authorization","",""
+"","414","Successful authorization","tests","Thu Nov 20 17:13:26 UTC 2025","passed","Thu Nov 20 17:13:27 UTC 2025","TestAuth","test_authorization","",""
+"","206","Unsuccessful authorization without necessary auth data","tests","Thu Nov 20 17:13:27 UTC 2025","passed","Thu Nov 20 17:13:27 UTC 2025","TestAuth","test_authorization","",""
