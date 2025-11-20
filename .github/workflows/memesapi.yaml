@@ -25,7 +25,7 @@ on:
           - fully_update_tests
 
 jobs:
-  tests:
+  run-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -96,28 +96,45 @@ jobs:
       - name: Install Allure CLI
         run: sudo npm install -g allure-commandline --unsafe-perm=true
 
-      - name: Download previous allure history
-        uses: actions/cache@v4
+      - name: Upload Allure results as artifact
+        uses: actions/upload-artifact@v4
         with:
-          path: allure-history
-          key: allure-history-${{ github.ref }}
+          name: allure-results
+          path: allure-results
 
-      - name: Generate Allure report
-        run: |
-          mkdir -p allure-history
-          allure generate allure-results --clean -o allure-report
-          cp -r allure-report/history allure-history/ || true
+  publish-report:
+    runs-on: ubuntu-latest
+    needs: run-tests
 
-      - name: Upload allure history
-        uses: actions/cache@v4
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Download Allure results artifact
+        uses: actions/download-artifact@v4
         with:
-          path: allure-history
-          key: allure-history-${{ github.ref }}
+          name: allure-results
+          path: allure-results
 
-      - name: Deploy Allure report to GitHub Pages
+      - name: Get Allure history
+        uses: actions/checkout@v5
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generates Allure Report with history
+        uses: simple-elf/allure-report-action@v1.12
+        if: always()
+        with:
+          allure_results: allure-results
+          allure_history: allure-history
+
+      - name: Deploy report to Github Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./allure-report
           publish_branch: gh-pages
+          publish_dir: allure-history
