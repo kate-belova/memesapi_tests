@@ -1,7 +1,28 @@
 name: MemesAPI tests
 
-on: [ push, pull_request, workflow_dispatch ]
-
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: Choose target
+        required: true
+        default: all_tests
+        type: choice
+        options:
+          - all_tests
+          - auth_tests
+          - create_tests
+          - crud_tests
+          - delete_tests
+          - memes_tests
+          - negative_tests
+          - positive_tests
+          - read_tests
+          - regression_tests
+          - smoke_tests
+          - fully_update_tests
 
 jobs:
   tests:
@@ -19,14 +40,79 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Run memesapi_tests
+
+      - name: Run all tests for push/PR
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
         run: pytest
+
+      - name: Run all tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment_target == 'all_tests'
+        run: pytest
+
+      - name: Run authorization tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment_target == 'auth_tests'
+        run: pytest -m auth
+
+      - name: Run POST tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment_target == 'create_tests'
+        run: pytest -m create
+
+      - name: Run POST, GET, PUT, PATCH, DELETE tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment_target == 'crud_tests'
+        run: pytest -m crud
+
+      - name: Run DELETE tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment_target == 'delete_tests'
+        run: pytest -m delete
+
+      - name: Run memes tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment_target == 'memes_tests'
+        run: pytest -m memes
+
+      - name: Run negative tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment_target == 'negative_tests'
+        run: pytest -m negative
+
+      - name: Run positive tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment_target == 'positive_tests'
+        run: pytest -m positive
+
+      - name: Run GET tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment_target == 'read_tests'
+        run: pytest -m read
+
+      - name: Run regression tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment_target == 'regression_tests'
+        run: pytest -m regression
+
+      - name: Run smoke tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment_target == 'smoke_tests'
+        run: pytest -m smoke
+
+      - name: Run PUT tests
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment_target == 'fully_update_tests'
+        run: pytest -m fully_update
 
       - name: Install Allure CLI
         run: sudo npm install -g allure-commandline --unsafe-perm=true
 
+      - name: Download previous allure history
+        uses: actions/cache@v4
+        with:
+          path: allure-history
+          key: allure-history-${{ github.ref }}
+
       - name: Generate Allure report
-        run: allure generate allure-results --clean -o allure-report
+        run: |
+          mkdir -p allure-history
+          allure generate allure-results --clean -o allure-report
+          cp -r allure-report/history allure-history/ || true
+
+      - name: Upload allure history
+        uses: actions/cache@v4
+        with:
+          path: allure-history
+          key: allure-history-${{ github.ref }}
 
       - name: Deploy Allure report to GitHub Pages
         if: always()
