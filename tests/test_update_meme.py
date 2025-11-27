@@ -23,7 +23,7 @@ class TestUpdateMeme:
         ).model_dump()
         put_meme_api.update_meme(m_id, meme_data_validated, auth_headers)
 
-        put_meme_api.assert_response_is_200()
+        put_meme_api.assert_response_status(200)
         put_meme_api.assert_meme_data(meme_data_validated)
 
     @allure.feature('Memes')
@@ -45,7 +45,7 @@ class TestUpdateMeme:
         ).model_dump()
         put_meme_api.update_meme(m_id, meme_data_validated, auth_headers)
 
-        put_meme_api.assert_response_is_403()
+        put_meme_api.assert_response_status(403)
         put_meme_api.assert_error_message()
 
     @allure.feature('Memes')
@@ -61,7 +61,7 @@ class TestUpdateMeme:
         ).model_dump()
         put_meme_api.update_meme(m_id, meme_data_validated)
 
-        put_meme_api.assert_response_is_401()
+        put_meme_api.assert_response_status(401)
         put_meme_api.assert_error_message()
 
     @allure.feature('Memes')
@@ -81,7 +81,7 @@ class TestUpdateMeme:
             m_id, meme_data_validated, auth_headers
         )
 
-        put_meme_api.assert_response_is_404()
+        put_meme_api.assert_response_status(404)
         put_meme_api.assert_error_message()
 
     @allure.feature('Memes')
@@ -106,5 +106,5 @@ class TestUpdateMeme:
         update_meme_data['id'] = m_id
         put_meme_api.update_meme(m_id, meme_data, auth_headers)
 
-        put_meme_api.assert_response_is_400()
+        put_meme_api.assert_response_status(400)
         put_meme_api.assert_error_message()

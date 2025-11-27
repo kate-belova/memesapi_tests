@@ -28,7 +28,7 @@ class TestCreateMeme:
         meme_data_validated = PostMemeRequestSchema(**meme_data).model_dump()
         post_meme_api.add_meme(meme_data_validated, auth_headers)
 
-        post_meme_api.assert_response_is_200()
+        post_meme_api.assert_response_status(200)
         post_meme_api.assert_meme_data(meme_data_validated)
 
     @allure.feature('Memes')
@@ -41,7 +41,7 @@ class TestCreateMeme:
             **post_meme_data[0]
         ).model_dump()
         post_meme_api.add_meme(meme_data_validated)
-        post_meme_api.assert_response_is_401()
+        post_meme_api.assert_response_status(401)
         post_meme_api.assert_error_message()
 
     @allure.feature('Memes')
@@ -56,7 +56,7 @@ class TestCreateMeme:
         post_meme_api.add_meme_with_wrong_url(
             meme_data_validated, auth_headers
         )
-        post_meme_api.assert_response_is_404()
+        post_meme_api.assert_response_status(404)
         post_meme_api.assert_error_message()
 
     @allure.feature('Memes')
@@ -78,5 +78,5 @@ class TestCreateMeme:
         self, post_meme_api, meme_data, auth_headers
     ):
         post_meme_api.add_meme(meme_data, auth_headers)
-        post_meme_api.assert_response_is_400()
+        post_meme_api.assert_response_status(400)
         post_meme_api.assert_error_message()

@@ -30,7 +30,7 @@ class TestAuth:
         auth_data = AuthRequestSchema(**auth_data).model_dump()
         auth_api.get_token(auth_data)
 
-        auth_api.assert_response_is_200()
+        auth_api.assert_response_status(200)
         auth_api.assert_user(auth_data)
         auth_api.assert_token()
         auth_api.assert_valid_token()
@@ -43,5 +43,5 @@ class TestAuth:
         auth_api = AuthAPI()
         auth_api.get_token()
 
-        auth_api.assert_response_is_500()
+        auth_api.assert_response_status(500)
         auth_api.assert_error_message()

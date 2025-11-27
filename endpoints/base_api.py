@@ -18,41 +18,11 @@ class BaseAPI:
         self.expected_text_in_error_message = None
         self.actual_error_message = None
 
-    @allure.step('Assert response status is OK')
-    def assert_response_is_200(self):
+    @allure.step('Assert response status is {status}')
+    def assert_response_status(self, status):
         assert (
-            self.status_code == 200
-        ), f'Expected status code 200, but got {self.status_code}'
-
-    @allure.step('Assert response status is Bad Request')
-    def assert_response_is_400(self):
-        assert (
-            self.status_code == 400
-        ), f'Expected status code 400, but got {self.status_code}'
-
-    @allure.step('Assert response status is Unauthorized')
-    def assert_response_is_401(self):
-        assert (
-            self.status_code == 401
-        ), f'Expected status code 401, but got {self.status_code}'
-
-    @allure.step('Assert response status is Forbidden')
-    def assert_response_is_403(self):
-        assert (
-            self.status_code == 403
-        ), f'Expected status code 403, but got {self.status_code}'
-
-    @allure.step('Assert response status is Not Found')
-    def assert_response_is_404(self):
-        assert (
-            self.status_code == 404
-        ), f'Expected status code 404, but got {self.status_code}'
-
-    @allure.step('Assert response status is Server Error')
-    def assert_response_is_500(self):
-        assert (
-            self.status_code == 500
-        ), f'Expected status code 500, but got {self.status_code}'
+            self.status_code == status
+        ), f'Expected status code {status}, but got {self.status_code}'
 
     @allure.step('Assert meme data in response is the one sent in request')
     def assert_meme_data(self, expected_data):

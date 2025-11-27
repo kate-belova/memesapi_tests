@@ -18,11 +18,11 @@ class TestDeleteMeme:
         self, delete_meme_api, get_meme_api, meme_id, auth_headers
     ):
         delete_meme_api.delete_meme(meme_id, auth_headers)
-        delete_meme_api.assert_response_is_200()
+        delete_meme_api.assert_response_status(200)
         delete_meme_api.assert_delete_message()
 
         get_meme_api.get_meme(meme_id, auth_headers)
-        get_meme_api.assert_response_is_404()
+        get_meme_api.assert_response_status(404)
         get_meme_api.assert_error_message()
 
     @allure.feature('Memes')
@@ -39,7 +39,7 @@ class TestDeleteMeme:
     ):
         m_id = another_user_meme[0]
         delete_meme_api.delete_meme(m_id, auth_headers)
-        delete_meme_api.assert_response_is_403()
+        delete_meme_api.assert_response_status(403)
         delete_meme_api.assert_error_message()
 
     @allure.feature('Memes')
@@ -51,7 +51,7 @@ class TestDeleteMeme:
         self, delete_meme_api, meme_id, auth_headers
     ):
         delete_meme_api.delete_meme_with_wrong_url(meme_id, auth_headers)
-        delete_meme_api.assert_response_is_404()
+        delete_meme_api.assert_response_status(404)
         delete_meme_api.assert_error_message()
 
     @allure.feature('Memes')
@@ -61,7 +61,7 @@ class TestDeleteMeme:
     @pytest.mark.delete
     def test_delete_meme_without_auth(self, delete_meme_api, meme_id):
         delete_meme_api.delete_meme(meme_id)
-        delete_meme_api.assert_response_is_401()
+        delete_meme_api.assert_response_status(401)
         delete_meme_api.assert_error_message()
 
     @allure.feature('Memes')
@@ -73,5 +73,5 @@ class TestDeleteMeme:
         self, delete_meme_api, auth_headers
     ):
         delete_meme_api.delete_meme(unexisting_meme_id, auth_headers)
-        delete_meme_api.assert_response_is_404()
+        delete_meme_api.assert_response_status(404)
         delete_meme_api.assert_error_message()
