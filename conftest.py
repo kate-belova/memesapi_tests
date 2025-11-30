@@ -14,9 +14,13 @@ def pytest_configure(config):
     config.option.allure_report_dir = str(allure_dir)
 
 
+@pytest.fixture
+def auth_api():
+    return AuthAPI()
+
+
 @pytest.fixture()
-def auth_token():
-    auth_api = AuthAPI()
+def auth_token(auth_api):
     auth_data = valid_auth_data[0]
     auth_api.get_token(auth_data)
 
@@ -30,8 +34,7 @@ def auth_token():
 
 
 @pytest.fixture()
-def another_user_auth_token():
-    auth_api = AuthAPI()
+def another_user_auth_token(auth_api):
     auth_api.get_token(another_user_auth_data)
 
     if auth_api.status_code == 200 and auth_api.token:

@@ -1,7 +1,6 @@
 import allure
 import pytest
 
-from endpoints import AuthAPI
 from test_data import valid_auth_data
 
 
@@ -24,8 +23,7 @@ class TestAuth:
     )
     @pytest.mark.positive
     @pytest.mark.smoke
-    def test_successful_authorization(self, auth_data):
-        auth_api = AuthAPI()
+    def test_successful_authorization(self, auth_api, auth_data):
         auth_api.get_token(auth_data)
 
         auth_api.assert_response_status(200)
@@ -37,8 +35,7 @@ class TestAuth:
     @allure.story('Authorization')
     @allure.title('Unsuccessful authorization without necessary auth data')
     @pytest.mark.negative
-    def test_authorization_without_necessary_fields(self):
-        auth_api = AuthAPI()
+    def test_authorization_without_necessary_fields(self, auth_api):
         auth_api.get_token()
 
         auth_api.assert_response_status(500)
