@@ -2,7 +2,6 @@ import allure
 import pytest
 
 from endpoints import AuthAPI
-from schemas import AuthRequestSchema
 from test_data import valid_auth_data
 
 
@@ -27,7 +26,6 @@ class TestAuth:
     @pytest.mark.smoke
     def test_successful_authorization(self, auth_data):
         auth_api = AuthAPI()
-        auth_data = AuthRequestSchema(**auth_data).model_dump()
         auth_api.get_token(auth_data)
 
         auth_api.assert_response_status(200)
