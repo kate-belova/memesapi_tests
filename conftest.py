@@ -73,8 +73,12 @@ def post_meme_api(request):
 
     original_add_meme = api.add_meme
 
-    def add_meme_with_tracking(meme_data, auth_data=None):
-        result = original_add_meme(meme_data, auth_data)
+    def add_meme_with_tracking(
+        meme_data,
+        auth_data=None,
+        validate=True,
+    ):
+        result = original_add_meme(meme_data, auth_data, validate=validate)
         if api.id and api.id not in created_meme_ids:
             created_meme_ids.append((api.id, auth_data))
         return result

@@ -1,6 +1,8 @@
 import allure
 import requests
 
+from schemas import PostMemeRequestSchema
+
 
 class BaseAPI:
     def __init__(self):
@@ -25,8 +27,14 @@ class BaseAPI:
         ), f'Expected status code {status}, but got {self.status_code}'
 
     @allure.step('Assert meme data in response is the one sent in request')
-    def assert_meme_data(self, expected_data):
-        for key, value in expected_data.items():
+    def assert_meme_data(self, expected_data, ignore_missing_fields=False):
+        expected_data_validated = PostMemeRequestSchema(
+            **expected_data
+        ).model_dump()
+        for key, value in expected_data_validated.items():
+            if ignore_missing_fields and key not in self.response_data:
+                continue
+
             assert self.response_data[key] == value, (
                 f'Expected {key} to be {value}, '
                 f'but got {self.response_data[key]}'

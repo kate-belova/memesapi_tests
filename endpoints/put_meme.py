@@ -2,7 +2,7 @@ import allure
 import requests
 
 from endpoints import BaseAPI
-from schemas import MemeResponseSchema
+from schemas import MemeResponseSchema, PutMemeRequestSchema
 
 
 class PutMeme(BaseAPI):
@@ -12,10 +12,14 @@ class PutMeme(BaseAPI):
         self.id = None
 
     @allure.step('Send PUT request to fully update meme by id')
-    def update_meme(self, meme_id, meme_data, auth_data=None):
+    def update_meme(self, meme_id, meme_data, auth_data=None, validate=True):
+        payload = meme_data
+        if validate:
+            payload = PutMemeRequestSchema(**meme_data).model_dump()
+
         self.url = self.base_url + f'/meme/{meme_id}'
         self.response = requests.put(
-            url=self.url, headers=auth_data, json=meme_data
+            url=self.url, headers=auth_data, json=payload
         )
         self.status_code = self.response.status_code
         if self.status_code == 400:

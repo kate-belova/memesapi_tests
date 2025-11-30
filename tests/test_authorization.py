@@ -14,11 +14,11 @@ class TestAuth:
         'auth_data',
         valid_auth_data,
         ids=[
-            'valid_name_kate',
-            'empty_name',
-            'name_with_spaces',
-            'name_with_numbers',
-            'long_name',
+            'valid name',
+            'empty name',
+            'name with spaces',
+            'name with numbers',
+            'long name',
         ],
     )
     @pytest.mark.positive

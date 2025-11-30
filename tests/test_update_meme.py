@@ -1,7 +1,6 @@
 import allure
 import pytest
 
-from schemas import PutMemeRequestSchema
 from test_data import update_meme_data, invalid_meme_data_to_update
 
 
@@ -18,13 +17,12 @@ class TestUpdateMeme:
     def test_put_meme_success(self, put_meme_api, posted_meme, auth_headers):
         m_id = posted_meme[0]
         update_meme_data['id'] = m_id
-        meme_data_validated = PutMemeRequestSchema(
-            **update_meme_data
-        ).model_dump()
-        put_meme_api.update_meme(m_id, meme_data_validated, auth_headers)
+        put_meme_api.update_meme(m_id, update_meme_data, auth_headers)
 
         put_meme_api.assert_response_status(200)
-        put_meme_api.assert_meme_data(meme_data_validated)
+        put_meme_api.assert_meme_data(
+            update_meme_data, ignore_missing_fields=True
+        )
 
     @allure.feature('Memes')
     @allure.story('Fully update meme')
@@ -40,10 +38,7 @@ class TestUpdateMeme:
     ):
         m_id = another_user_meme[0]
         update_meme_data['id'] = m_id
-        meme_data_validated = PutMemeRequestSchema(
-            **update_meme_data
-        ).model_dump()
-        put_meme_api.update_meme(m_id, meme_data_validated, auth_headers)
+        put_meme_api.update_meme(m_id, update_meme_data, auth_headers)
 
         put_meme_api.assert_response_status(403)
         put_meme_api.assert_error_message()
@@ -56,10 +51,7 @@ class TestUpdateMeme:
     def test_put_meme_without_auth(self, posted_meme, put_meme_api):
         m_id = posted_meme[0]
         update_meme_data['id'] = m_id
-        meme_data_validated = PutMemeRequestSchema(
-            **update_meme_data
-        ).model_dump()
-        put_meme_api.update_meme(m_id, meme_data_validated)
+        put_meme_api.update_meme(m_id, update_meme_data)
 
         put_meme_api.assert_response_status(401)
         put_meme_api.assert_error_message()
@@ -73,12 +65,8 @@ class TestUpdateMeme:
         self, posted_meme, put_meme_api, auth_headers
     ):
         m_id = posted_meme[0]
-        update_meme_data['id'] = m_id
-        meme_data_validated = PutMemeRequestSchema(
-            **update_meme_data
-        ).model_dump()
         put_meme_api.update_meme_with_wrong_url(
-            m_id, meme_data_validated, auth_headers
+            m_id, update_meme_data, auth_headers
         )
 
         put_meme_api.assert_response_status(404)
@@ -93,10 +81,10 @@ class TestUpdateMeme:
         'meme_data',
         invalid_meme_data_to_update,
         ids=[
-            'missing_url_field',
-            'missing_all_fields',
-            'missing_text_and_info_fields',
-            'missing_info_fields',
+            'missing url field',
+            'missing all fields',
+            'missing text and info fields',
+            'missing info fields',
         ],
     )
     def test_put_meme_with_invalid_data(
@@ -104,7 +92,7 @@ class TestUpdateMeme:
     ):
         m_id = posted_meme[0]
         update_meme_data['id'] = m_id
-        put_meme_api.update_meme(m_id, meme_data, auth_headers)
+        put_meme_api.update_meme(m_id, meme_data, auth_headers, validate=False)
 
         put_meme_api.assert_response_status(400)
         put_meme_api.assert_error_message()

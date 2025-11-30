@@ -2,7 +2,7 @@ import allure
 import requests
 
 from endpoints import BaseAPI
-from schemas import MemeResponseSchema
+from schemas import MemeResponseSchema, PostMemeRequestSchema
 
 
 class PostMeme(BaseAPI):
@@ -13,9 +13,13 @@ class PostMeme(BaseAPI):
         self.id = None
 
     @allure.step('Send POST request to add new meme')
-    def add_meme(self, meme_data, auth_data=None):
+    def add_meme(self, meme_data, auth_data=None, validate=True):
+        payload = meme_data
+        if validate:
+            payload = PostMemeRequestSchema(**meme_data).model_dump()
+
         self.response = requests.post(
-            url=self.url, headers=auth_data, json=meme_data
+            url=self.url, headers=auth_data, json=payload
         )
         self.status_code = self.response.status_code
         if self.status_code == 400:
