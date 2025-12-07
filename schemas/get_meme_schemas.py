@@ -9,9 +9,7 @@ class MemeResponseSchema(BaseModel):
     info: dict[str, Any] = Field(
         default_factory=dict, description='Meme info dict'
     )
-    tags: list[str | int] = Field(
-        default_factory=list, description='List of tags'
-    )
+    tags: list[Any] = Field(default_factory=list, description='List of tags')
     text: str = Field(default='', description='Meme text')
     updated_by: str = Field(default='', description='User name')
     url: str = Field(default='', description='Meme URL')
@@ -37,9 +35,21 @@ class MemeResponseSchema(BaseModel):
     @field_validator('tags', mode='before')
     @classmethod
     def validate_tags(cls, v):
+        if v is None:
+            return []
+
         if isinstance(v, str):
-            v = json.loads(v)
-            return [v] if v else []
+            try:
+                parsed = json.loads(v)
+                if isinstance(parsed, list):
+                    return parsed
+                return [parsed]
+            except (json.JSONDecodeError, TypeError):
+                return [v]
+
+        if not isinstance(v, list):
+            return [v]
+
         return v
 
     @field_validator('url', mode='before')
